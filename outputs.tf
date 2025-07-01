@@ -1,3 +1,13 @@
+output "blob_storage_name" {
+  description = "Name of the Blob Storage account"
+  value       = azurerm_storage_account.blob.name
+}
+
+output "blob_storage_primary_access_key" {
+  description = "Primary access key for the Blob Storage"
+  value       = azurerm_storage_account.blob.primary_access_key
+  sensitive   = true
+}
 output "aks_cluster_name" {
   description = "Name of the AKS cluster"
   value       = azurerm_kubernetes_cluster.aks.name
