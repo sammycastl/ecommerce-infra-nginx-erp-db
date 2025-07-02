@@ -5,11 +5,9 @@ resource "azurerm_postgresql_flexible_server" "replica" {
   version                = "12"
   create_mode            = "Replica"
   source_server_id       = azurerm_postgresql_flexible_server.primary.id
-  delegated_subnet_id    = azurerm_subnet.db.id
-  private_dns_zone_id    = azurerm_private_dns_zone.db.id
   zone                   = "2"
 
-  depends_on = [azurerm_postgresql_flexible_server.primary] 
+  depends_on = [azurerm_postgresql_flexible_server.primary]
 
   maintenance_window {
     day_of_week  = 0

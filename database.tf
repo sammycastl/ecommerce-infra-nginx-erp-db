@@ -18,12 +18,5 @@ resource "azurerm_postgresql_flexible_server" "primary" {
     start_minute = 0
   }
 
-  /*
-  TODO: ESTOS RECURSOS TAMPOCO EXISTEN
-  delegated_subnet_id = azurerm_subnet.db.id
-  private_dns_zone_id = azurerm_private_dns_zone.db.id
-  */
-  
-
   tags = var.tags
 }
