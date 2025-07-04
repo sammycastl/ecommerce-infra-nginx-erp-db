@@ -1,32 +1,29 @@
-resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "aks-${var.project}-${var.environment}"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = "aks-${var.project}-${var.environment}"
-
-  default_node_pool {
-    name       = "default"
-    node_count = 2
-    vm_size    = "Standard_D2s_v3" 
-  }
-
-  identity {
-    type = "SystemAssigned"
-  }
-
-  tags = var.tags
+resource "azurerm_service_plan" "gateway" {
+  name = "gateway-${ var.project }-${ var.environment }"
+  location = var.location
+  resource_group_name = data.azurerm_resource_group.rg.name
+  sku_name = "F1"
+  os_type = "Linux"
 }
 
-resource "azurerm_kubernetes_cluster_node_pool" "nginx" {
-  name                  = "nginx"
-  kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
-  vm_size               = "Standard_D2s_v3" 
-  node_count            = 2
-  os_type               = "Linux"
+resource "azurerm_linux_web_app" "nginx" {
+  name = "ecomm-nginx-${ var.project }-${ var.environment }"
+  location = var.location
+  resource_group_name = data.azurerm_resource_group.rg.name
+  service_plan_id = azurerm_service_plan.gateway.id
 
-  node_labels = {
-    "role" = "nginx"
+  site_config {
+    always_on = false
+    application_stack {
+      docker_registry_url = "https://index.docker.io"
+      docker_image_name = "nginx:latest"
+    }
+  }
+
+  app_settings = {
+    WEBSITES_PORT = "80"
   }
 
   tags = var.tags
+
 }
